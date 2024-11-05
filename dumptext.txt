@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Exit on error
+set -e
+
+# Step 1: Check for Node and npm installation
+if ! command -v node &> /dev/null; then
+  echo "Node.js is not installed. Please install it and run this script again."
+  exit 1
+fi
+
+if ! command -v npm &> /dev/null; then
+  echo "npm is not installed. Please install it and run this script again."
+  exit 1
+fi
+
+# Step 2: Check and Install Angular CLI if 'ng' command is not available
+if ! command -v ng &> /dev/null; then
+  echo "Angular CLI is not installed globally. Installing Angular CLI locally in the project..."
+  npm install @angular/cli
+  # Adjust PATH to use locally installed ng command
+  PATH=$(npm bin):$PATH
+fi
+
+# Step 3: Install project dependencies
+echo "Installing project dependencies..."
+npm install
+
+# Step 4: Build the Angular project
+echo "Building the Angular project..."
+ng build --prod
+
+# Step 5: Serve the application
+echo "Serving the Angular application..."
+ng serve --open
+
+# Print completion message
+echo "Setup complete. Your AngularJS project is running."
