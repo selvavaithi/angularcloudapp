@@ -44,7 +44,8 @@ export MY_DATABASE_URL="your_actual_database_url"
 
 
 # Example: Run the Angular app in production mode
-ng build --prod
+# ng build --prod
+ng build 
 
 
 echo "Setup completed successfully!"
