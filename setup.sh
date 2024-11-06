@@ -33,7 +33,7 @@ apt-get update -y
 apt-get install -y nodejs npm git build-essential curl
 
 printf "Installing == angularcloudapp == dependencies...\n"
-cd ./angularcloudapp
+# cd ./angularcloudapp
 npm install
 printf "Completed.\n\n"
 
