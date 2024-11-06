@@ -1,35 +1,34 @@
-# Copyright 2019 Google LLC
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-# 
-#     https://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# Suggested code may be subject to a license. Learn more: ~LicenseLog:3166388319.
+# Suggested code may be subject to a license. Learn more: ~LicenseLog:308075120.
+# Suggested code may be subject to a license. Learn more: ~LicenseLog:892036002.
+# Suggested code may be subject to a license. Learn more: ~LicenseLog:1778614999.
+#dockerfile
+# Use the official Node.js 20 image  based on Alpine Linux as the build stage
+FROM node:20-alpine as build
 
-FROM node:16
+# Set the working directory inside the container to /app
+WORKDIR /app
 
-# Create app directory
-WORKDIR /usr/src/app
+# Copy package.json and package-lock.json (if present) to the working directory
+COPY package*.json ./
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY ./package*.json .
-RUN npm install -g @angular/cli
-
+# Install project dependencies
 RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
 
-RUN npm run build
-# Bundle app source
+# Copy the rest of the application code to the working directory
 COPY . .
 
-EXPOSE 8080
-CMD [ "node", "src/main.js" ]
+# Build the Angular application
+RUN npm run build
+
+# Use the official Nginx image based on Alpine Linux for the production stage
+FROM nginx:alpine
+
+# Copy the built Angular application from the build stage to the Nginx web server directory
+COPY --from=build /app/dist/myapp/browser /usr/share/nginx/html
+
+# Expose port 80 for HTTP traffic
+EXPOSE 80
+
+# Start Nginx in the foreground
+CMD ["nginx", "-g", "daemon off;"]
